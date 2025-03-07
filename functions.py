@@ -1,4 +1,3 @@
-import requests
 from requests import get, patch, post
 from dotenv import load_dotenv, find_dotenv, set_key
 from os import getenv, environ
@@ -23,7 +22,7 @@ def update_env_api(key, value):
 
 
 def get_new_orders():  # Получить список новых заказов
-    url_get_inf = 'https://suppliers-api.wildberries.ru/api/v3/orders/new'
+    url_get_inf = 'https://marketplace-api.wildberries.ru/api/v3/orders/new'
     res = get(url_get_inf, headers=authorization())
     return res.json()
 
@@ -81,7 +80,7 @@ def create_supply(name):  # Изменение таблицы соответст
         return result[0][1]
 
     else:  # Если запись не существует, создаем новую
-        url_post = 'https://suppliers-api.wildberries.ru/api/v3/supplies'
+        url_post = 'https://marketplace-api.wildberries.ru/api/v3/supplies'
         name_supp = {
             'name': name
         }
@@ -104,7 +103,7 @@ def delete_supp():
     con.commit()
 
 
-def fetch_id(articles):  # Возвращает id всех заказов с передаваемым артикулом
+def fetch_id(articles):  # Возвращает id всех заказов по артикулу
     con = connect('database.sqlite3')
     cur = con.cursor()
     ids = []
@@ -207,6 +206,3 @@ def resort_tasks():
     # update_tasks()
 
     # update_env_api('papa', '123123')
-
-
-    # clear_supplies()

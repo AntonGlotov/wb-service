@@ -42,6 +42,6 @@ def clear_art_supp():
     con.close()
 
 
-# if __name__ == '__main__':
-    # clear_art_supp()
-    # export_to_sqlite('uploads/Articules.xlsx')
+if __name__ == '__main__':
+    clear_art_supp()
+    # export_to_sqlite('Articules.xlsx')
