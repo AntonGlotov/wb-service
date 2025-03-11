@@ -61,7 +61,7 @@ def clear_supplies():
     cur.execute('SELECT supplyId FROM supplies')
     for x in cur.fetchall():
         temp = (get(f'https://marketplace-api.wildberries.ru/api/v3/supplies/{x[0]}', headers=authorization()))
-        if temp.status_code == 200 and temp.json()['done']:
+        if (temp.status_code == 404) or (temp.status_code == 200 and temp.json()['done']):
             cur.execute('DELETE FROM `supplies` WHERE supplyId = ?', (x[0],))
 
     con.commit()
