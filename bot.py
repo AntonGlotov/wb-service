@@ -2,7 +2,7 @@ from telegram import Update, KeyboardButton, ReplyKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
 from dotenv import load_dotenv
 from os import getenv
-from functions import sort_tasks, resort_tasks, delete_supp, update_tasks, fetch_id, patch_supply, create_supply, clear_supplies, authorization
+from functions import sort_tasks, resort_tasks, delete_supp, update_tasks, fetch_id, patch_supply, create_supply, clear_supplies, authorization, update_env, check_connect
 from sqlite3 import connect
 from excel_parcing import export_to_sqlite
 import asyncio
@@ -17,9 +17,9 @@ cancel_flag = False  # Глобальная переменная для отме
 async def start(update: Update, context):
     button_resort = KeyboardButton('Пересортировать')
     button_cancel = KeyboardButton('Отменить')
-    button_api =KeyboardButton('Поменять ключ API')
+    button_api = KeyboardButton('Поменять ключ API')
 
-    keyboard = ReplyKeyboardMarkup([[button_resort, button_cancel]], resize_keyboard=True)
+    keyboard = ReplyKeyboardMarkup([[button_resort, button_cancel, button_api]], resize_keyboard=True)
 
     await update.message.reply_text(
         "Нажмите на кнопку ниже, чтобы запустить программу.",
@@ -38,6 +38,21 @@ async def button_pressed(update: Update, context):
     elif update.message.text == 'Отменить':
         cancel_flag = True  # Устанавливаем флаг отмены
         await update.message.reply_text("Отмена задачи")
+
+    elif update.message.text == 'Поменять ключ API':
+        await update.message.reply_text('Отправьте новый API ключ')
+        context.user_data['waiting_for_api_key'] = True  # Ставим флаг
+
+    elif context.user_data.get('waiting_for_api_key'):
+        new_api_key = update.message.text
+        update_env('wb_api_token', new_api_key)
+
+        if check_connect():
+            await update.message.reply_text('✅ Ключ обновлён!')
+            context.user_data.pop('waiting_for_api_key')  # Убираем флаг
+        else:
+            await update.message.reply_text('❌ Неверный API ключ. Попробуйте ещё раз:')
+
 
 
 async def run_resort_tasks(update: Update, context):

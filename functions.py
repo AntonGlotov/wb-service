@@ -14,7 +14,7 @@ def authorization():  # Авторизация по Токену
     return headers
 
 
-def update_env_api(key, value):
+def update_env(key, value):
     dotenv_file = find_dotenv()
     load_dotenv(dotenv_file)
     set_key(dotenv_file, key, value)
@@ -201,8 +201,17 @@ def resort_tasks():
     con.close()
 
 
-# if __name__ == '__main__':
+def check_connect():
+    res = get('https://common-api.wildberries.ru/ping', headers=authorization())
+    if res.status_code == 200:
+        return True
+
+    return False
+
+
+if __name__ == '__main__':
     # sort_tasks()
     # update_tasks()
 
-    # update_env_api('papa', '123123')
+    # update_env('wb_api_token', '123123')
+    print(check_connect())
