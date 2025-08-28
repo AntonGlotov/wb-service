@@ -43,22 +43,23 @@ def count_tasks(supplyId):
     return len(res.json()['orders'])
 
 
-def make_report(start_date, end_date=''):
-    if end_date == '':
-        dt = datetime.strptime(start_date, "%d.%m.%Y")
+def make_report(start_end_dates):
+    if len(start_end_dates) == 1:
+        dt = datetime.strptime(start_end_dates[0], "%d.%m.%Y")
         formatted_date = dt.strftime("%Y-%m-%d")
         con = connect('databasereport.sqlite3')
         cur = con.cursor()
         cur.execute('SELECT id, name FROM supplies WHERE date(scanDt) = ?', (formatted_date,))
 
     else:
-        dt_start = datetime.strptime(start_date, "%d.%m.%Y")
-        dt_end = datetime.strptime(end_date, "%d.%m.%Y")
+        dt_start = datetime.strptime(start_end_dates[0], "%d.%m.%Y")
+        dt_end = datetime.strptime(start_end_dates[1], "%d.%m.%Y")
         formatted_date_start = dt_start.strftime("%Y-%m-%d")
         formatted_date_end = dt_end.strftime("%Y-%m-%d")
         con = connect('databasereport.sqlite3')
         cur = con.cursor()
-        cur.execute('SELECT id, name FROM supplies WHERE ? < date(scanDt) < ?', (formatted_date_start, formatted_date_end,))
+        cur.execute('SELECT id, name FROM supplies WHERE date(scanDt) >= ? AND date(scanDt) <= ?', (formatted_date_start, formatted_date_end))
+
 
     response = {}
     fetched = cur.fetchall()
@@ -69,9 +70,7 @@ def make_report(start_date, end_date=''):
 
     for x in fetched:
         response[x[1]] = count_tasks(x[0])
-
     result_lines = ['Отгружены']
-
     for key, value in response.items():
         result_lines.append(f"{key} --- {value} шт")
     result_lines.append('_________________')
@@ -89,4 +88,7 @@ def dict_to_string(data_dict):
     return "\n".join(result_lines)
 
 
-update_db()
+if __name__ == '__main__':
+    update_db()
+
+    # print(make_report('26.08.2025', '28.08.2025'))

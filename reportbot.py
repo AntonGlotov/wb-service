@@ -27,7 +27,7 @@ async def start(update: Update, context):
 async def handle_message(update: Update, context):
     await update.message.reply_text('Сейчас посмотрю')
     update_db()
-    report = make_report(update.message.text)
+    report = make_report(update.message.text.split('-'))
     await update.message.reply_text(f'{update.message.text}\n{report}')
 
 
