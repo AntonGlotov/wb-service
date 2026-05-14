@@ -1,6 +1,9 @@
 import sqlite3
+from pathlib import Path
 
-connection = sqlite3.connect('database.sqlite3')
+DATABASE_PATH = Path(__file__).resolve().parents[1] / "data" / "database.sqlite3"
+
+connection = sqlite3.connect(DATABASE_PATH)
 cursor = connection.cursor()
 
 cursor.execute('''
