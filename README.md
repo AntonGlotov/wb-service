@@ -1,6 +1,6 @@
 # WB Service
 
-Сервис для работы с заказами и поставками Wildberries через Telegram-бота.
+Сервис для работы с заказами и поставками Wildberries через Telegram бота.
 
 ## Структура
 
@@ -20,12 +20,6 @@ uploads/
   .gitkeep                # временные файлы, загруженные в бот
 ```
 
-## Установка
-
-```bash
-pip install -r requirements.txt
-```
-
 ## Слои
 
 - `app/clients/wildberries_client.py` - все HTTP-запросы к Wildberries.
@@ -42,8 +36,3 @@ pip install -r requirements.txt
 - `app/bot/handlers.py` - обработчики команд, кнопок и файлов.
 - `app/bot/keyboards.py` - клавиатуры Telegram.
 - `app/bot/messages.py` - тексты кнопок и ответов.
-
-## Следующий этап рефакторинга
-
-1. После переписывания Telegram-бота поправить тексты в `app/bot/messages.py`.
-2. Добавить нормальную обработку ошибок API и логирование в сервисном слое.
